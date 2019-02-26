@@ -10,8 +10,6 @@ from luma_files.demo_opts import get_device
 from luma.core.virtual import terminal
 from luma.core.render import canvas
 from PIL import ImageFont
-#https://stackoverflow.com/questions/270745/how-do-i-determine-all-of-my-ip-addresses-when-i-have-multiple-nics
-from netifaces import interfaces, ifaddresses, AF_INET
 import Adafruit_DHT
 
 DHT_MODEL = 11
@@ -19,7 +17,7 @@ DHT_DATA_PIN = 4
 DB_TABLE = 'temperature_and_humidity'
 DB_FILENAME = 'heat_tech.db'
 QUERY_MINUTES = 1 # minutes per query and per pixel on OLED
-# TODO: print out number values to show range
+# TODO: print out number values on left to show range
 ESTIMATED_TEMP_MIN = 17 # C
 ESTIMATED_TEMP_MAX = 30 # C
 FONT_SIZE_PX = 16
@@ -72,7 +70,6 @@ def calculate_y(temperature):
     return result
 
 def draw_bar(draw, x, temperature):
-    # draw bar at location
     # x1, y1, x2, y2
     draw.line((x, calculate_y(temperature), x, device.height), fill="white")
 
@@ -83,7 +80,6 @@ def draw_bars(draw):
     for i in range(length - 1, -1, -1):
         print(temperatures_and_humidities[i][3], temperatures_and_humidities[i][1])
         offset = datetime.today() - datetime.strptime(temperatures_and_humidities[i][3], '%Y-%m-%d %H:%M:%S')
-        # print(offset.total_seconds() / 60 / (i + 1))
         # TODO: need to track location of index here and draw a blank line for the appropriate ones
         if (0 < (offset.total_seconds() / 60 / (i + 1)) < device.width):
             draw_bar(draw, i, temperatures_and_humidities[i][1])
