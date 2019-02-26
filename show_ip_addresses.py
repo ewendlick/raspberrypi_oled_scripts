@@ -1,16 +1,7 @@
-# https://unix.stackexchange.com/questions/57852/crontab-job-start-1-min-after-reboot
-
-# HEY, look in /etc/systemd/system/show_ip_addresses_on_oled.service
-
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Copyright (c) 2014-18 Richard Hull and contributors
-# See LICENSE.rst for details.
 # PYTHON_ARGCOMPLETE_OK
 
-"""
-Simple println capabilities.
-"""
 
 import os
 import time
@@ -43,7 +34,7 @@ def main():
 
             term.println('Running...')
             term.println('\n'.join(ip4_addresses()))
-            term.println('ayoooooooooooo')
+            term.println('ayoooooooooooooooooo')
 
 
 if __name__ == "__main__":
