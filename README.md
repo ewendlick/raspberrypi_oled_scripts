@@ -6,7 +6,7 @@ OLED controls are built thanks to Luma ()
 Copy the show_ip_addresses_on_oled.service file to /etc/systemd/system folder
 `sudo cp show_ip_addresses_on_oled.service /etc/systemd/system`
 
-Run `systemctl daemon-reload`
+Run `sudo systemctl daemon-reload`
 
 Enable the service on boot
 `sudo systemmctl enable show_ip_addresses_on_oled.service`
@@ -22,15 +22,15 @@ pip3 install netifaces
 
 | GPIO         | GPIO          |
 | -----------  |:-------------:|
-| OLED VCC     |               |
+| OLED VCC(+)  |               |
 | OLED SDA     |               |
 | OLED SCL     |               |
 | DHT DATA     |               |
-| DHT -        |               |
+| DHT GND(-)   |               |
 |              |               |
+|              | OLED GND(-)   |
 |              |               |
-|              |               |
-| DHT +        |               |
+| DHT 3.3V(+)  |               |
 |              |               |
 |              |               |
 |              |               |
@@ -47,3 +47,6 @@ Optionally, to improve performance, increase the I2C baudrate from the default o
 
 dtparam=i2c_arm=on,i2c_baudrate=400000
 Then reboot.
+
+# Timezone
+You will need to set your timezone... probably
