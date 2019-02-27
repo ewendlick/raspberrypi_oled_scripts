@@ -3,57 +3,138 @@
 <head>
   <meta charset="UTF-8">
   <style>
-    /*
-    svg {
-      font-family: "Helvetica Neue", Helvetica;
-    }
-
-    .line {
-      fill: none;
-      stroke: #000;
-      stroke-width: 2px;
-    }
-    */
   </style>
 
   <script src="/echarts.js"></script>
   <script>
+    function generateRange () {
+
+    }
     const url='/data'
     fetch(url)
       .then(data => { return data.json() })
-      .then(jsondata => { console.log(jsondata) })
+      .then(jsondata => { console.log(jsondata)
+        // TODO: Function to average temperatures into time blocks of maybe 30 minutes
+      })
       .catch(error => { console.error(error) })
 
     // based on prepared DOM, initialize echarts instance
     document.addEventListener("DOMContentLoaded", function() {
       const myChart = echarts.init(document.getElementById('chart'))
 
-      // specify chart configuration item and data
-      const options = {
+      // TODO: Install a linter to handle this
+      // https://ecomfe.github.io/echarts-doc/public/en/option.html#yAxis
+      options = {
           title: {
-              text: 'ECharts entry example'
+              text: 'Weekly temperatures',
+              subtext: 'subtext'
           },
-          tooltip: {},
+          tooltip: {
+              trigger: 'axis'
+          },
           legend: {
-              data:['Temps']
+              data:['Mon','Tue','Wed','Thur','Fri']
           },
-          xAxis: {
-              data: ["shirt","cardign","chiffon shirt","pants","heels","socks"]
+          toolbox: { // TODO: look into this, needs translations in here
+              show: true,
+              feature: {
+                  dataZoom: {
+                      yAxisIndex: 'none'
+                  },
+                  dataView: {readOnly: false},
+                  magicType: {type: ['line', 'bar']},
+                  restore: {},
+                  saveAsImage: {}
+              }
           },
-          yAxis: {},
-          series: [{
-              name: 'Temps',
-              type: 'bar',
-              data: [5, 20, 36, 10, 10, 20]
-          }]
-      }
+          xAxis:  {
+              type: 'category',
+              boundaryGap: false,
+              data: ['9:00am',
+                     '9:30am',
+                     '10:00am',
+                     '10:30am',
+                     '11:00am',
+                     '11:30am',
+                     '12:00pm',
+                     '12:30pm',
+                     '1:00pm',
+                     '1:30pm',
+                     '2:00pm',
+                     '2:30pm',
+                     '3:00pm',
+                     '3:30pm',
+                     '4:00pm',
+                     '4:30pm',
+                     '5:00pm',
+                     '5:30pm',
+                     '6:00pm']
+          },
+          yAxis: {
+              type: 'value',
+              min: 20, // 'data-min' can be used
+              max: 30,
+              axisLabel: {
+                  formatter: '{value} °C'
+              }
+          },
+          series: [
+              {
+                  name:'Mon',
+                  type:'line',
+                  smooth: 0.5,
+                  data:[25, 25, 26],
+                  // markPoint: {
+                  //     data: [
+                  //         {type: 'max', name: 'High'},
+                  //         {type: 'min', name: 'Low'}
+                  //     ]
+                  // },
+                  markLine: {
+                      data: [
+                          {type: 'average', name: 'Avg'}
+                      ]
+                  }
+              },
+              {
+                  name:'Tue',
+                  type:'line',
+                  smooth: 0.5,
+                  data:[24, 25, 28],
+                  // markPoint: {
+                  //     data: [
+                  //         {name: 'I do not know', value: -2, xAxis: 1, yAxis: -1.5}
+                  //     ]
+                  // },
+                  markLine: {
+                      data: [
+                          {type: 'average', name: 'Avg'}
+                          // [{
+                          //     symbol: 'none',
+                          //     x: '90%',
+                          //     yAxis: 'max'
+                          // }, {
+                          //     symbol: 'circle',
+                          //     label: {
+                          //         normal: {
+                          //             position: 'start',
+                          //             formatter: '最大值' // ?? lol
+                          //         }
+                          //     },
+                          //     type: 'max',
+                          //     name: 'High'
+                          // }]
+                      ]
+                  }
+              }
+          ]
+      };
 
-      // use configuration item and data specified to show chart
       myChart.setOption(options)
     })
   </script>
 </head>
 <body>
-  <div id="chart" style="width: 600px;height:400px;"></div>
+  <div id="chart" style="width: 800px; height:400px;"></div>
 </body>
 </html>
