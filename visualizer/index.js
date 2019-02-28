@@ -3,15 +3,23 @@ const app = express()
 const path = require('path')
 const sqlite3 = require('sqlite3').verbose()
 const dayjs = require('dayjs')
+const commandLineArgs = require('command-line-args')
 
-const port = process.argv.slice(2)[0] || 9090
-const db = new sqlite3.Database(path.join(__dirname, '../heat_tech.db'), (err) => {
+const commandLineOptions = [
+  { name: 'port', alias: 'p', type: Number, defaultValue: 9090 },
+  { name: 'databasefile', alias: 'd', type: String, defaultValue: '../heat_tech.db' },
+  { name: 'pollingseconds', alias: 'P', type: Number, defaultValue: 60 }
+]
+const options = commandLineArgs(commandLineOptions)
+
+const db = new sqlite3.Database(path.join(__dirname, options.databasefile), (err) => {
   if (err) {
     console.error('err.message')
+    return
   } else {
-    console.log('connected to the heat_tech database')
+    console.log(`using database file: ${options.databasefile}`)
   }
-}) // TODO: allow user to specify
+})
 // TODO: Split this up even further, so that this functions as an API server that serves the database information
 // to a frontend, which polls every minute and redraws the content.
 
@@ -35,5 +43,4 @@ app.get('/echarts.js', function (req, res) {
   res.sendFile(path.join(__dirname + '/assets/echarts-4-1-0/echarts.common.min.js'))
 })
 
-// TODO: print out the operating IP?
-app.listen(port)
+app.listen(options.port)
