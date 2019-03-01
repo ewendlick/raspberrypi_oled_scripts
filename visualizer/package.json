@@ -1,0 +1,20 @@
+{
+  "name": "temperature_data_visualizer",
+  "version": "0.1.0",
+  "description": "Reads temperature data and displays it with D3",
+  "main": "index.js",
+  "scripts": {
+    "serve": "node index.js -p 9090",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Eli Wendlick",
+  "license": "ISC",
+  "dependencies": {
+    "command-line-args": "^5.0.2",
+    "dayjs": "^1.8.8",
+    "dumper.js": "^1.3.1",
+    "express": "^4.16.4",
+    "knex": "^0.16.3",
+    "sqlite3": "^4.0.6"
+  }
+}

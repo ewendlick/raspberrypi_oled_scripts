@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+  </style>
+
+  <script src="/echarts.js"></script>
+  <script>
+    // TODO: function generateTimes () {}
+    function generateRange () {
+      // TODO: possibly rely on sqlite3 to return date ranges (would allow updating to function better
+    }
+
+    // const url='/data'
+    const url='/data?daysAgoFrom=0&daysAgoTo=7'
+    fetch(url)
+      .then(data => { return data.json() })
+      .then(jsondata => {
+        console.log(jsondata)
+        doEeeet(jsondata)
+      })
+      .catch(error => { console.error(error) })
+
+    function doEeeet(jsondata) {
+    // document.addEventListener("DOMContentLoaded", function() {
+      const myChart = echarts.init(document.getElementById('chart'))
+
+      // usage: https://ecomfe.github.io/echarts-doc/public/en/option.html
+      options = {
+        title: {
+          text: 'Weekly temperatures',
+          subtext: 'Why is this place so warm?'
+        },
+        tooltip: {
+          trigger: 'axis'
+        },
+        legend: {
+          data:['Mon','Tue','Wed','Thur','Fri']
+        },
+        toolbox: {
+          show: true,
+          feature: {
+            dataZoom: {
+              yAxisIndex: 'none',
+              title: {
+                zoom: 'Zoom',
+                back: 'Back'
+              }
+            },
+            dataView: {
+              readOnly: false,
+              title: 'Data view',
+              lang: ['Data view', 'Back to chart', 'Refresh']
+            },
+            magicType: {
+              type: ['line', 'bar'],
+              title: { 'line': 'Lines', 'bar': 'Bars' },
+            },
+            restore: {
+              title: 'Restore'
+            },
+            saveAsImage: {
+              title: 'Save png'
+            }
+          }
+        },
+        xAxis:  {
+          type: 'category',
+          boundaryGap: false,
+          data: ['9:00am',
+                 '9:30am',
+                 '10:00am',
+                 '10:30am',
+                 '11:00am',
+                 '11:30am',
+                 '12:00pm',
+                 '12:30pm',
+                 '1:00pm',
+                 '1:30pm',
+                 '2:00pm',
+                 '2:30pm',
+                 '3:00pm',
+                 '3:30pm',
+                 '4:00pm',
+                 '4:30pm',
+                 '5:00pm',
+                 '5:30pm',
+                 '6:00pm']
+        },
+        yAxis: {
+          type: 'value',
+          min: 20, // 'data-min' can be used
+          max: 30,
+          axisLabel: {
+            formatter: '{value} °C'
+          }
+        },
+        series: [
+          {
+            name:'Mon',
+            type:'line',
+            smooth: 0.5,
+            data: Object.values(jsondata.Monday),
+            // markPoint: {
+            //     data: [
+            //         {type: 'max', name: 'High'},
+            //         {type: 'min', name: 'Low'}
+            //     ]
+            // },
+            markLine: {
+              data: [
+                { type: 'average', name: 'Avg' }
+              ]
+            }
+          },
+          {
+            name:'Tue',
+            type:'line',
+            smooth: 0.5,
+            data: Object.values(jsondata.Tuesday),
+            markLine: {
+              data: [
+                { type: 'average', name: 'Avg' }
+              ]
+            }
+          },
+          {
+            name:'Wed',
+            type:'line',
+            smooth: 0.5,
+            data: Object.values(jsondata.Wednesday),
+            markLine: {
+              data: [
+                { type: 'average', name: 'Avg' }
+              ]
+            }
+          },
+          {
+            name:'Thur',
+            type:'line',
+            smooth: 0.5,
+            data: Object.values(jsondata.Thursday),
+            markLine: {
+              data: [
+                { type: 'average', name: 'Avg' }
+              ]
+            }
+          },
+          {
+            name:'Fri',
+            type:'line',
+            smooth: 0.5,
+            data: Object.values(jsondata.Friday),
+            markLine: {
+              data: [
+                { type: 'average', name: 'Avg' }
+              ]
+            }
+          }
+        ]
+      };
+
+      myChart.setOption(options)
+    // })
+    }
+  </script>
+</head>
+<body>
+  <div id="chart" style="width: 800px; height:600px;"></div>
+</body>
+</html>
