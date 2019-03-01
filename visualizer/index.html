@@ -16,12 +16,14 @@
     const url='/data?daysAgoFrom=0&daysAgoTo=7'
     fetch(url)
       .then(data => { return data.json() })
-      .then(jsondata => { console.log(jsondata)
-        // TODO: Function to average temperatures into time blocks of maybe 30 minutes
+      .then(jsondata => {
+        console.log(jsondata)
+        doEeeet(jsondata)
       })
       .catch(error => { console.error(error) })
 
-    document.addEventListener("DOMContentLoaded", function() {
+    function doEeeet(jsondata) {
+    // document.addEventListener("DOMContentLoaded", function() {
       const myChart = echarts.init(document.getElementById('chart'))
 
       // usage: https://ecomfe.github.io/echarts-doc/public/en/option.html
@@ -99,7 +101,7 @@
             name:'Mon',
             type:'line',
             smooth: 0.5,
-            data:[25, 25, 26, null, 28, 27, 27],
+            data: Object.values(jsondata.Monday),
             // markPoint: {
             //     data: [
             //         {type: 'max', name: 'High'},
@@ -116,7 +118,40 @@
             name:'Tue',
             type:'line',
             smooth: 0.5,
-            data:[24, 25, 28],
+            data: Object.values(jsondata.Tuesday),
+            markLine: {
+              data: [
+                { type: 'average', name: 'Avg' }
+              ]
+            }
+          },
+          {
+            name:'Wed',
+            type:'line',
+            smooth: 0.5,
+            data: Object.values(jsondata.Wednesday),
+            markLine: {
+              data: [
+                { type: 'average', name: 'Avg' }
+              ]
+            }
+          },
+          {
+            name:'Thur',
+            type:'line',
+            smooth: 0.5,
+            data: Object.values(jsondata.Thursday),
+            markLine: {
+              data: [
+                { type: 'average', name: 'Avg' }
+              ]
+            }
+          },
+          {
+            name:'Fri',
+            type:'line',
+            smooth: 0.5,
+            data: Object.values(jsondata.Friday),
             markLine: {
               data: [
                 { type: 'average', name: 'Avg' }
@@ -127,10 +162,11 @@
       };
 
       myChart.setOption(options)
-    })
+    // })
+    }
   </script>
 </head>
 <body>
-  <div id="chart" style="width: 800px; height:400px;"></div>
+  <div id="chart" style="width: 800px; height:600px;"></div>
 </body>
 </html>
