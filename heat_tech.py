@@ -12,7 +12,7 @@ from luma.core.render import canvas
 from PIL import ImageFont
 import Adafruit_DHT
 
-DHT_MODEL = 11
+DHT_MODEL = 22
 DHT_DATA_PIN = 4
 DB_TABLE = 'temperature_and_humidity'
 DB_FILENAME = 'heat_tech.db'

@@ -120,4 +120,6 @@ app.get('/echarts.js', function (req, res) {
   res.sendFile(path.join(__dirname + '/assets/echarts-4-1-0/echarts.common.min.js'))
 })
 
+app.use(express.static('assets/images'))
+
 app.listen(options.port)
