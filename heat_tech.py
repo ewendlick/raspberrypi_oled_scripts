@@ -15,6 +15,7 @@ import Adafruit_DHT
 DHT_MODEL = 22
 DHT_DATA_PIN = 4
 DB_TABLE = 'temperature_and_humidity'
+DB_CACHE_TABLE = 'temperature_and_humidity_cache'
 DB_FILENAME = 'heat_tech.db'
 QUERY_MINUTES = 1 # minutes per query and per pixel on OLED
 # TODO: print out number values on left to show range
@@ -25,6 +26,9 @@ FONT_SIZE_PX = 16
 try:
     sqldb = sqlite3.connect(DB_FILENAME)
     query = 'create table if not exists ' + DB_TABLE + '(id INTEGER PRIMARY KEY AUTOINCREMENT, temperature REAL, humidity REAL, created_at DATETIME, deleted_at DATETIME)'
+    sqldb.execute(query)
+    # TODO: make steppage into a key, make DATETIME into a key
+    query = 'create table if not exists ' + DB_CACHE_TABLE + '(id INTEGER PRIMARY KEY AUTOINCREMENT, steppage INTEGER, json_data STRING, date DATE, created_at DATETIME, deleted_at DATETIME)'
     sqldb.execute(query)
     sqldb.commit()
 except Error as e:

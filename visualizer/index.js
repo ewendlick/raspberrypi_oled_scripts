@@ -19,17 +19,6 @@ const knex = require('knex')({
   connection: { filename: options.databasefile }
 })
 
-// const db = new sqlite3.Database(path.join(__dirname, options.databasefile), (err) => {
-//   if (err) {
-//     console.error('err.message')
-//     return
-//   } else {
-//     console.log(`using database file: ${options.databasefile}`)
-//   }
-// })
-// TODO: Split this up even further, so that this functions as an API server that serves the database information
-// to a frontend, which polls every minute and redraws the content.
-
 function generateMinuteKeys (minutes = 30, startMinutes = 540, endMinutes = 1080) {
   let minuteKeys = []
   for (let accumulator = startMinutes; accumulator <= endMinutes; accumulator += minutes) {
@@ -81,6 +70,40 @@ function generateWithNearestMinuteKeys (minuteKeys, minuteSteppage, convertedRow
   }
   // console.log('2', result)
   return result
+}
+
+function getPastDate (date) {
+  const targetDate = dayjs(day).format('YYYY-MM-DD')
+
+  if (!targetDate.isBefore(dayjs)) {
+    console.log('Attempted to get invalid date')
+    return
+  }
+
+  try {
+    const row = await knex.table('temperature_and_humidity_cache')
+                          .select('json_data')
+                          .where('steppage', 30)
+                          .where('date', date)
+                          .limit(1)
+  } catch (err) {
+    console.error(err)
+  }
+
+  console.log(row)
+  if (rows.length > 1) {
+    return row
+  } else {
+    // run the thing, build it, save it, return it
+    try {
+      // TODO: build the content to go in
+      await knex.table('temperature_and_humidity_cache')
+                .insert({steppage: 30, json_data: ????, date: targetDate, created_at: dayjs().format('YYYY-MM-DD HH:MM:ss')})
+      getPastDate(date)
+    } catch (err) {
+      console.error(err)
+    }
+  }
 }
 
 app.get('/data', async function (req, res) {
