@@ -14,8 +14,8 @@ import Adafruit_DHT
 
 DHT_MODEL = 22
 DHT_DATA_PIN = 4
-DB_TABLE = 'temperature_and_humidity'
-DB_CACHE_TABLE = 'temperature_and_humidity_cache'
+DB_TABLE = 'temperature_and_humidity_home'
+DB_CACHE_TABLE = 'temperature_and_humidity_cache_home'
 DB_FILENAME = 'heat_tech.db'
 QUERY_MINUTES = 1 # minutes per query and per pixel on OLED
 # TODO: print out number values on left to show range

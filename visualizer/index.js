@@ -4,7 +4,7 @@ const path = require('path')
 const sqlite3 = require('sqlite3').verbose() // TODO: delete??
 const dayjs = require('dayjs')
 const commandLineArgs = require('command-line-args')
-// const { dump } = require('dumper.js') // TODO: use
+// const { dump } = require('dumper.js') // TODO: use // dump(result)
 
 const commandLineOptions = [
   { name: 'port', alias: 'p', type: Number, defaultValue: 9090 },
@@ -72,7 +72,7 @@ function generateWithNearestMinuteKeys (minuteKeys, minuteSteppage, convertedRow
   return result
 }
 
-function getPastDate (date) {
+const getPastDate = async function (date) {
   const targetDate = dayjs(day).format('YYYY-MM-DD')
 
   if (!targetDate.isBefore(dayjs)) {
@@ -97,8 +97,9 @@ function getPastDate (date) {
     // run the thing, build it, save it, return it
     try {
       // TODO: build the content to go in
+      console.log(row)
       await knex.table('temperature_and_humidity_cache')
-                .insert({steppage: 30, json_data: ????, date: targetDate, created_at: dayjs().format('YYYY-MM-DD HH:MM:ss')})
+                .insert({steppage: 30, json_data: row, date: targetDate, created_at: dayjs().format('YYYY-MM-DD HH:MM:ss')})
       getPastDate(date)
     } catch (err) {
       console.error(err)
@@ -116,25 +117,30 @@ app.get('/data', async function (req, res) {
     const minuteKeys = generateMinuteKeys(minuteSteppage)
 
     try {
-      const rows = await knex.table('temperature_and_humidity')
-                             .select('temperature', 'created_at')
-                             .where('created_at', '>', targetDayStart)
-                             .where('created_at', '<', targetDayEnd)
-                             .orderBy('created_at', 'asc') // Will already be sorted, but this is to prevent any possible bugs
-                             .limit(1440) // 1440 minutes per day
-      // TODO: move this into the generateWithNearestMinuteKeys function?
-      const convertedRows = rows.map(row => {
-        // minutes since midnight
-        return {minutes: dayjs(row.created_at).diff(targetDayStart, 'minute'), temperature: row.temperature}
-      })
-      const groupedByMinutes = generateWithNearestMinuteKeys(minuteKeys, minuteSteppage, convertedRows)
-
+      // Check if past
+      if (targetDayStart.isBefore(dayjs) && false) {
+        
+        // .....WORKING HERE
+        // const getPastDate (date) {
+      } else {
+        const rows = await knex.table('temperature_and_humidity_home')
+                               .select('temperature', 'created_at')
+                               .where('created_at', '>', targetDayStart)
+                               .where('created_at', '<', targetDayEnd)
+                               .orderBy('created_at', 'asc') // Will already be sorted, but this is to prevent any possible bugs
+                               .limit(1440) // 1440 minutes per day
+        // TODO: move this into the generateWithNearestMinuteKeys function?
+        const convertedRows = rows.map(row => {
+          // minutes since midnight
+          return {minutes: dayjs(row.created_at).diff(targetDayStart, 'minute'), temperature: row.temperature}
+        })
+        const groupedByMinutes = generateWithNearestMinuteKeys(minuteKeys, minuteSteppage, convertedRows)
+      }
       result[dayjs(targetDayStart).format('dddd')] = groupedByMinutes
     } catch (err) {
       console.log(err)
     }
   }
-  // dump(result)
   res.json(result)
 })
 
