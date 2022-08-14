@@ -75,8 +75,9 @@ function generateWithNearestMinuteKeys (minuteKeys, minuteSteppage, convertedRow
 const getPastDate = async function (date) {
   const targetDate = dayjs(day).format('YYYY-MM-DD')
 
-  if (!targetDate.isBefore(dayjs)) {
-    console.log('Attempted to get invalid date')
+  console.log('hit line 78-------------------------------------')
+  if (!dayjs(targetDate).isBefore(dayjs)) {
+    console.log('Attempted to get invalid date=====================================')
     return
   }
 
@@ -110,6 +111,7 @@ const getPastDate = async function (date) {
 app.get('/data', async function (req, res) {
   // TODO: handle req.query.daysAgoFrom and req.query.daysAgoTo validation
   let result = {}
+  console.log('daysAgo, daysAgoFrom=====================================================', req.query.daysAgoFrom)
   for (daysAgo = req.query.daysAgoFrom; daysAgo < req.query.daysAgoTo; daysAgo++) {
     const targetDayStart = dayjs().subtract(daysAgo, 'day').format('YYYY-MM-DD 00:00:00')
     const targetDayEnd = dayjs().subtract(daysAgo, 'day').format('YYYY-MM-DD 23:59:59')
@@ -118,7 +120,8 @@ app.get('/data', async function (req, res) {
 
     try {
       // Check if past
-      if (targetDayStart.isBefore(dayjs) && false) {
+      console.log('targetDayStart', targetDayStart)
+      if (dayjs(targetDayStart).isBefore(dayjs) && false) {
         
         // .....WORKING HERE
         // const getPastDate (date) {
@@ -135,8 +138,8 @@ app.get('/data', async function (req, res) {
           return {minutes: dayjs(row.created_at).diff(targetDayStart, 'minute'), temperature: row.temperature}
         })
         const groupedByMinutes = generateWithNearestMinuteKeys(minuteKeys, minuteSteppage, convertedRows)
+        result[dayjs(targetDayStart).format('dddd')] = groupedByMinutes
       }
-      result[dayjs(targetDayStart).format('dddd')] = groupedByMinutes
     } catch (err) {
       console.log(err)
     }
