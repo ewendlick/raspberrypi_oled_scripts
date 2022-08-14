@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "serve": "node index.js -p 9090",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "killprevious": "fuser -k 9090/tcp"
   },
   "author": "Eli Wendlick",
   "license": "ISC",
